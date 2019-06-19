@@ -1,4 +1,4 @@
-function HomeStoryModule( data, startRatio, useCollapse ) {
+function HomeStoryModule(data, startRatio, useCollapse) {
 
 	var _instance = Snail.extend(new Module());
 	_instance.style.backgroundColor = UIColors.WHITE;
@@ -23,11 +23,11 @@ function HomeStoryModule( data, startRatio, useCollapse ) {
 		addStories();
 
 		Assets.SCROLL_CONTROLLER.addEventListener(ScrollController.ON_SCROLL_MOVE, onScroll);
-		// updateStories();
+		//updateStories();
 	};
 
-	_instance.resize_mobile = function(width, height) {
-		if( BrowserDetect.DESKTOP ) {
+	_instance.resize_mobile = function (width, height) {
+		if (BrowserDetect.DESKTOP) {
 			_instance.resize_desktop(width, height);
 			return;
 		}
@@ -39,8 +39,8 @@ function HomeStoryModule( data, startRatio, useCollapse ) {
 		updateStories();
 	};
 
-	_instance.resize_tablet = function(width, height) {
-		if( BrowserDetect.DESKTOP ) {
+	_instance.resize_tablet = function (width, height) {
+		if (BrowserDetect.DESKTOP) {
 			_instance.resize_desktop(width, height);
 			return;
 		}
@@ -71,45 +71,47 @@ function HomeStoryModule( data, startRatio, useCollapse ) {
 	}
 
 	function updateStories() {
-		for(var i = 0; i < _numOfStories; i++) {
+		for (var i = 0; i < _numOfStories; i++) {
 			var story = _stories[i];
-			story.setExpandedWidth( _storyExpandedW );
-			story.setCollapsedWidth( _storyCollapsedW );
-			story.setHeight( _height );
+			story.setExpandedWidth(_storyExpandedW);
+			story.setCollapsedWidth(_storyCollapsedW);
+			story.setHeight(_height);
 			story.setRatioOffset(i);
 
 			// if(i == _numOfStories - 1) {
 			// 	story.setLastStory();
 			// }
 
-			if(useCollapse) {
+			if (useCollapse) {
 				story.setRatio(_ratio, true);
 			} else {
 				// if( BrowserDetect.MOBILE) {
 				// 	story.setRatioNoOffset(0, true);
 				// }else {
-					story.setRatioNoOffset(1, true);
+				story.setRatioNoOffset(1, true);
 				// }
 			}
 
-			TweenMax.set(story, {x:_storyExpandedW * i});
+			TweenMax.set(story, {
+				x: _storyExpandedW * i
+			});
 		}
 	}
 
 
-	_instance.getExpandedStoryWidth = function() {
+	_instance.getExpandedStoryWidth = function () {
 		return _storyExpandedW;
 	};
 
-	_instance.getWidth = function() {
+	_instance.getWidth = function () {
 		return _width;
 	};
 
-	_instance.getNumOfStories = function() {
+	_instance.getNumOfStories = function () {
 		return _numOfStories;
 	};
 
-	_instance.kill = function() {
+	_instance.kill = function () {
 		Assets.SCROLL_CONTROLLER.removeEventListener(ScrollController.ON_SCROLL_MOVE, onScroll);
 	};
 
@@ -124,51 +126,52 @@ function HomeStoryModule( data, startRatio, useCollapse ) {
 		_instance.setToRatio(ratio);
 	}
 
-	_instance.setToRatio = function( ratio ) {
-		if(!useCollapse) { return; }
+	_instance.setToRatio = function (ratio) {
+		if (!useCollapse) {
+			return;
+		}
 
 		_currRatio = ratio;
 
 		var atIndex = Math.floor(ratio * _numOfStories) - 3;
-		if(atIndex < 0) {
+		if (atIndex < 0) {
 			atIndex = 0;
 		}
 
 		var scrollingToLast = false;
 
 		var length = atIndex + 7;
-		if( length > _numOfStories) {
+		if (length > _numOfStories) {
 			length = _numOfStories;
 			scrollingToLast = true;
 		}
 
 		var xPos = _storyExpandedW * atIndex;
-		for(var i = atIndex; i < length; i++) {
+		for (var i = atIndex; i < length; i++) {
 			var story = _stories[i];
-			story.setRatio( ratio * _numOfStories);
-			
-			TweenMax.set(story, {x:xPos});
+			story.setRatio(ratio * _numOfStories);
+
+			TweenMax.set(story, {
+				x: xPos
+			});
 
 			xPos += story.getWidth();
 		}
+
 	};
 
-	_instance.expandSubstories = function (storyNumber){
-		
-		console.log({_stories});
-		console.log("expanding substories of "+(storyNumber-1));
-		for(x=0;x<_stories.length;x++){
-			var storyToExpand=_stories[x];
+	_instance.expandSubstories = function (storyNumber) {
+		console.log({
+			_stories
+		});
+		console.log("expanding substories of " + (storyNumber - 1));
+		for (x = 0; x < _stories.length; x++) {
+			var storyToExpand = _stories[x];
 			var sub = storyToExpand._subStories;
-			if(sub){	
-				console.log("sub_storyToExpand "+sub+" x="+x);//undefined}
+			if (sub) {
+				console.log("sub_storyToExpand " + sub + " x=" + x); //undefined}
 			}
-		
 		}
-	
-		
-	
-
 	}
 
 	function addStories() {
@@ -177,61 +180,73 @@ function HomeStoryModule( data, startRatio, useCollapse ) {
 
 		var model = new TextAreaModel();
 		model.maxFontSize = 18;
-		if( BrowserDetect.MOBILE) {
+		if (BrowserDetect.MOBILE) {
 			model.maxFontSize = model.minFontSize = 13;
 
 		}
 
-		_numOfStories = stories.length;
-		for(var i = 0; i < _numOfStories; i++) {
-			var story = new HomeStory(stories[i], _numOfStories - i, model);
+		_numOfStories = 0; //stories.length;
+
+
+		for (var i = 0; i < stories.length; i++) {
+			var storyNumber = stories.length - i;
+			var story = new HomeStory(stories[i], storyNumber, model);
 			story.onStoryClick = onStoryClick;
-			if( modelId == i ) {
-				
+			if (modelId == i) {
 				story.setBodyModelController();
 			}
+			_numOfStories++;
 			_stories.push(story);
-		
-			
 			_instance.appendChild(story);
 			story.init();
 
-			subStories=story._subStories;
-			if(subStories){
-				for(j = 0;j<subStories.length;j++){
-					_instance.appendChild(subStories[j]);
-					subStories[j].init();
-				}
-				
-			}
-			// TweenMax.set(story, {x:_storyExpandedW * i});
+			var subStoriesData = ContentManager.getChildByAttr(stories[i], "name", "sub-stories");
+			if (subStoriesData) {
+				story.onStoryClick = function () {
+					var subStories = ContentManager.getChildrenByAttr(subStoriesData, "name", "sub-story");
+					for (j = 0; j < subStories.length; j++) {
+						_numOfStories++;
+						var subStory = new HomeStory(subStories[j], storyNumber * 10 + subStories.length - j, model);
+						//subStory._storyCollapsedW=0;
 
-			//If last story
-			if(useCollapse && i == _numOfStories - 1) {
-				var reverseStories = [];
-				for( var j = 0; j < 3; j++ ) {
-					reverseStories.push(_stories[ _numOfStories - 2 - j ]);
+						_stories.push(subStory);
+						_instance.appendChild(subStory);
+						subStory.init();
+						subStory.setCollapsedWidth(1);
+					}
 				}
-				story.reverseStories(reverseStories);
 			}
 		}
+
+		// 	// TweenMax.set(story, {x:_storyExpandedW * i});
+
+		// 	//If last story
+		// 	// if(useCollapse && i == _numOfStories - 1) {
+		// 	// 	var reverseStories = [];
+		// 	// 	for( var j = 0; j < 3; j++ ) {
+		// 	// 		reverseStories.push(_stories[ _numOfStories - 2 - j ]);
+		// 	// 	}
+		// 	// 	story.reverseStories(reverseStories);
+		// 	// }
+		// }
+
 	}
 
 
-	function onStoryClick( storyNumber ) {
+	function onStoryClick(storyNumber) {
 		//console.log("onStory Click")
-		if(_instance.onStoryClick != null) {
+		if (_instance.onStoryClick != null) {
 			_instance.onStoryClick(_numOfStories - storyNumber + 1);
 		}
 	}
 
-	function getLongestStoryId( stories ) {
+	function getLongestStoryId(stories) {
 		var highestCount = 0;
 		var highsetId = -1;
 		var l = stories.length;
-		for(var i = 0; i < l; i++) {
+		for (var i = 0; i < l; i++) {
 			var bodyHtml = ContentManager.getChildByAttr(stories[i], "name", "body").innerHTML;
-			if(bodyHtml.length > highestCount) {
+			if (bodyHtml.length > highestCount) {
 				highestCount = bodyHtml.length;
 				highsetId = i;
 			}

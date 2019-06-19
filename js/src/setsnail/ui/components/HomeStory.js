@@ -33,8 +33,6 @@ function HomeStory( data, storyNumber, bodyTextModel ) {
 
 	var _ratioWidthOverflow = 0;
 
-	var _subStories = [];
-
 	var _buttonContainer = document.createElement("div");
 	_buttonContainer.style.position = "absolute";
 
@@ -48,30 +46,7 @@ function HomeStory( data, storyNumber, bodyTextModel ) {
 		var slideData = ContentManager.getChildByAttr(data, "name", "images");
 		var slides = ContentManager.getChildrenByAttr(slideData, "name", "image");
 		_numOfImages = slides.length;
-
-
-		var subStoriesData = ContentManager.getChildByAttr(data, "name", "sub-stories");
-		if(subStoriesData){
-		var subStories = ContentManager.getChildrenByAttr(subStoriesData, "name", "sub-story");
-		var _numOfSubStories = subStories.length;
-	//	console.log("on HomeStory.init substories are "+_numOfSubStories );
-
-
-		for(i=0;i<_numOfSubStories;i++){
-			
-			var model = new TextAreaModel();
-			var subStory = HomeStory(subStories[i],i,model);//document.createElement("div");
-			//_subStory.onStoryClick = onStoryClick;
-	
-			_subStories.push(subStory);
-			console.log("pushing substorie "+subStory);
-			_instance.parentNode.parentNode.appendChild(subStory);
-			subStory.init();
-			//console.log(_subStory);
-	
-		}
 		
-		}
 		addSiteLine();
 		if( !BrowserDetect.MOBILE ) {
 			addSlideButtons();
@@ -395,6 +370,7 @@ function HomeStory( data, storyNumber, bodyTextModel ) {
 
 		_body.init(bodyTextModel, _mode );
 		_body.style.color = UIColors.FONT_MED_ON_WHITE;
+		
 
 		_instance.appendChild(_body);
 	}
